@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{67EC0CAA-FB5E-4064-9474-365950259180}</ProjectGuid>
+    <ProjectGuid>{79514FC6-9899-4AD3-84F2-962173DEA402}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NumberGuesser</RootNamespace>
-    <AssemblyName>NumberGuesser</AssemblyName>
+    <RootNamespace>Saltuk.Nsudotnet.NumberGuesser</RootNamespace>
+    <AssemblyName>Saltuk.Nsudotnet.NumberGuesser</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

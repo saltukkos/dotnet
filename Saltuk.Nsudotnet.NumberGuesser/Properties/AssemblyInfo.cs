@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NumberGuesser")]
+[assembly: AssemblyTitle("Saltuk.Nsudotnet.NumberGuesser")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NumberGuesser")]
+[assembly: AssemblyProduct("Saltuk.Nsudotnet.NumberGuesser")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("67ec0caa-fb5e-4064-9474-365950259180")]
+[assembly: Guid("79514fc6-9899-4ad3-84f2-962173dea402")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NumberGuesser
+namespace Saltuk.Nsudotnet.NumberGuesser
 {
     class Program
     {
@@ -11,7 +11,7 @@ namespace NumberGuesser
         private const int SwearingFreq = 4;
         private static readonly string[] Swearings =
         {
-            "You're a looser, {0}...", 
+            "You're a looser, {0}...",
             "Ha-ha-ha, everyone, look at {0}'s face!",
             "You are sooo stuid, {0}...",
             "I bet you're much quicker in your girlfriend's bed.",
@@ -66,7 +66,7 @@ namespace NumberGuesser
                     Console.WriteLine("What do you mean?");
                 }
             }
-            
+
             Console.WriteLine("You spend {0} seconds for this stupid task", Math.Round(DateTime.Now.Subtract(startTime).Duration().TotalSeconds));
             Console.ReadLine();
         }
@@ -82,7 +82,7 @@ namespace NumberGuesser
             Console.WriteLine("History of your attempts:");
             foreach (var i in history)
             {
-                Console.WriteLine("{0} ({1} than {2})", i, i > value ? "bigger" : "less", value);        
+                Console.WriteLine("{0} ({1} than {2})", i, i > value ? "bigger" : "less", value);
             }
         }
     }

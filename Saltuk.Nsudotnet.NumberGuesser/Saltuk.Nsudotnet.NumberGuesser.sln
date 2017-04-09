@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NumberGuesser", "NumberGuesser\NumberGuesser.csproj", "{67EC0CAA-FB5E-4064-9474-365950259180}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltuk.Nsudotnet.NumberGuesser", "Saltuk.Nsudotnet.NumberGuesser.csproj", "{79514FC6-9899-4AD3-84F2-962173DEA402}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{67EC0CAA-FB5E-4064-9474-365950259180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67EC0CAA-FB5E-4064-9474-365950259180}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67EC0CAA-FB5E-4064-9474-365950259180}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67EC0CAA-FB5E-4064-9474-365950259180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79514FC6-9899-4AD3-84F2-962173DEA402}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79514FC6-9899-4AD3-84F2-962173DEA402}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79514FC6-9899-4AD3-84F2-962173DEA402}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79514FC6-9899-4AD3-84F2-962173DEA402}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
