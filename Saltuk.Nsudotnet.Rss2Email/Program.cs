@@ -14,7 +14,7 @@ namespace Saltuk.Nsudotnet.Rss2Email
             using (var gmailSender = new GmailSender("rss2emailforwarder@gmail.com", "rss2emailforwarderpassworD", "saltukkos@gmail.com"))
             {
                 RssForwarder forwarder = new RssForwarder();
-                forwarder.StartForwarding(gmailSender);
+                forwarder.StartForwarding("https://meduza.io/rss/all", gmailSender);
             }
         }
     }
