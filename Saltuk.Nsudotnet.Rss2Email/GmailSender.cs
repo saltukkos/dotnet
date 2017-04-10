@@ -34,10 +34,10 @@ namespace Saltuk.Nsudotnet.Rss2Email
         {
             try
             {
-                StringBuilder message = new StringBuilder("<b><h1>List of recent news:</h1></b><br>");
+                StringBuilder message = new StringBuilder("<h1>List of recent news:</h1>");
                 foreach (var item in data)
                 {
-                    message.AppendFormat("<br><h2><b>{0}</b></h2><br><h3>{1}<br><b>Full:</b>{2}<br></h3>",
+                    message.AppendFormat("<br><h2>{0}</h2><h3>{1}<br>Full:{2}</h3>",
                         item.Title, item.Description, item.Link);
                 }
                 MailMessage sendMessage = new MailMessage(_from, _to)
