@@ -13,17 +13,12 @@ namespace Saltuk.Nsudotnet.Rss2Email
 
         private const int ButtonPressCheckPeriod = 100;
 
-        public RssForwarder()
-        {
-            _readNews = new HashSet<string>();
-        }
-
         public RssForwarder(IEnumerable<string> savedHistory)
         {
-            _readNews = new HashSet<string>(savedHistory);
+            _readNews = savedHistory == null ? new HashSet<string>() : new HashSet<string>(savedHistory);
         }
 
-        public void StartForwarding(string url, IForwardSender sender)
+        public HashSet<string> StartForwarding(string url, IForwardSender sender)
         {
             Console.WriteLine("Press any key to stop");
             while (!Console.KeyAvailable)
@@ -50,6 +45,8 @@ namespace Saltuk.Nsudotnet.Rss2Email
                 }
  
             }
+
+            return _readNews;
         }
 
         private List<SendData> GetRecentNews(XDocument rss, out List<string> guids)
