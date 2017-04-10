@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Xml.Linq;
 
@@ -11,6 +10,8 @@ namespace Saltuk.Nsudotnet.Rss2Email
     class RssForwarder
     {
         private readonly HashSet<string> _readNews;
+
+        private const int ButtonPressCheckPeriod = 100;
 
         public RssForwarder()
         {
@@ -33,25 +34,25 @@ namespace Saltuk.Nsudotnet.Rss2Email
                     var rss = XDocument.Load(res.GetResponseStream());
 
                     List<string> newGuids;
-                    var sendData = getRecentNews(rss, out newGuids);
+                    var sendData = GetRecentNews(rss, out newGuids);
 
                     if (sendData.Count > 0 && sender.SendMessage(sendData))
                     {
                         _readNews.UnionWith(newGuids);
                     }
 
-                    Thread.Sleep(1000 * 30);
+                    SleepWatchingKey(30 * 1000);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
-                    Thread.Sleep(5000);
+                    SleepWatchingKey(5 * 1000);
                 }
  
             }
         }
 
-        private List<SendData> getRecentNews(XDocument rss, out List<string> guids)
+        private List<SendData> GetRecentNews(XDocument rss, out List<string> guids)
         {
             var items = from item in rss.Descendants()
                         where item.Name.LocalName == "item"
@@ -62,7 +63,7 @@ namespace Saltuk.Nsudotnet.Rss2Email
                             description = item.Element("description")?.Value,
                             guid = item.Element("guid")?.Value
                         }
-     ;
+            ;
 
             var sendData = new List<SendData>();
             guids = new List<string>();
@@ -81,6 +82,17 @@ namespace Saltuk.Nsudotnet.Rss2Email
             }
 
             return sendData;
+        }
+
+        private static void SleepWatchingKey(int msec)
+        {
+            while (msec > 0)
+            {
+                if (Console.KeyAvailable)
+                    return;
+                Thread.Sleep(ButtonPressCheckPeriod);
+                msec -= ButtonPressCheckPeriod;
+            }
         }
     }
 }
