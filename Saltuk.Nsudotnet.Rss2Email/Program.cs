@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using NDesk.Options;
 
 namespace Saltuk.Nsudotnet.Rss2Email
 {
@@ -14,12 +15,59 @@ namespace Saltuk.Nsudotnet.Rss2Email
 
         static void Main(string[] args)
         {
-            using (var gmailSender = new GmailSender("rss2emailforwarder@gmail.com", "rss2emailforwarderpassworD", "saltukkos@gmail.com"))
+
+            string url;
+            string email;
+            int checkPeriod;
+
+            if (!ParseParams(args, out url, out email, out checkPeriod))
+                return;
+
+            using (var gmailSender = new GmailSender("rss2emailforwarder@gmail.com", "rss2emailforwarderpassworD", email))
             {
                 RssForwarder forwarder = new RssForwarder(GetSavedInstance());
-                var newState = forwarder.StartForwarding("https://meduza.io/rss/all", gmailSender);
+                var newState = forwarder.StartForwarding(new Uri(url), gmailSender, checkPeriod);
                 SaveInstance(newState);
             }
+        }
+
+        private static bool ParseParams(string[] args, out string rss, out string email, out int checkPeriod)
+        {
+            string rssArg = null;
+            string emailArg = null;
+            int periodArg = 30;
+
+            var p = new OptionSet()
+            {
+                { "r|rss=", "http address of {RSS} channel", s => rssArg = s },
+                { "e|email=", "{EMAIL} address to forward {RSS} items", s => emailArg = s },
+                { "p|period=", "{PERIOD}(in seconds) to check new {RSS} items - not necessary", n => int.TryParse(n, out periodArg) }
+            };
+
+            try
+            {
+                p.Parse(args);
+
+            }
+            catch (Exception e)
+            {
+                p.WriteOptionDescriptions(Console.Out);
+                return false;
+            }
+            finally
+            {
+                rss = rssArg;
+                email = emailArg;
+                checkPeriod = periodArg;
+            }
+
+            if (rssArg == null || emailArg == null)
+            {
+                p.WriteOptionDescriptions(Console.Out);
+                return false;
+            }
+
+            return true;
         }
 
         private static HashSet<string> GetSavedInstance()

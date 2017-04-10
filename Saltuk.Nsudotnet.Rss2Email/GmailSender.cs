@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Saltuk.Nsudotnet.Rss2Email
 {
@@ -49,8 +47,9 @@ namespace Saltuk.Nsudotnet.Rss2Email
                 _client.Send(sendMessage);
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return false;
             }
         }

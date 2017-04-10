@@ -18,14 +18,14 @@ namespace Saltuk.Nsudotnet.Rss2Email
             _readNews = savedHistory == null ? new HashSet<string>() : new HashSet<string>(savedHistory);
         }
 
-        public HashSet<string> StartForwarding(string url, IForwardSender sender)
+        public HashSet<string> StartForwarding(Uri uri, IForwardSender sender, int checkPeriod)
         {
             Console.WriteLine("Press any key to stop");
             while (!Console.KeyAvailable)
             {
                 try
                 {
-                    var res = WebRequest.Create(url).GetResponse();
+                    var res = WebRequest.Create(uri).GetResponse();
                     var rss = XDocument.Load(res.GetResponseStream());
 
                     List<string> newGuids;
@@ -36,7 +36,7 @@ namespace Saltuk.Nsudotnet.Rss2Email
                         _readNews.UnionWith(newGuids);
                     }
 
-                    SleepWatchingKey(30 * 1000);
+                    SleepWatchingKey(checkPeriod * 1000);
                 }
                 catch (Exception e)
                 {
