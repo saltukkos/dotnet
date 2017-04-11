@@ -28,7 +28,7 @@ namespace Saltuk.Nsudotnet.Enigma
             using (var inFile = new FileStream(settings.InputFilename, FileMode.Open))
             using (var outFile = new FileStream(settings.OutputFilename, FileMode.Create))
             using (var key = settings.IsEncrypting ?
-                new FileStream(settings.InputFilename + ".key", FileMode.Create) : 
+                new FileStream(settings.OutputFilename + ".key", FileMode.Create) : 
                 new FileStream(settings.KeyFileName, FileMode.Open) )
             {
 
@@ -42,18 +42,16 @@ namespace Saltuk.Nsudotnet.Enigma
 
         static void Encrypt(SymmetricAlgorithm algorithm, Stream input, Stream output, Stream key)
         {
-            var keyByte = algorithm.Key;
-            algorithm.IV = keyByte;
 
-            using (var crypted = new CryptoStream(input, algorithm.CreateEncryptor(), CryptoStreamMode.Read))
-            using (var outWriter = new StreamWriter(output))
+            using (var crypted = new CryptoStream(output, algorithm.CreateEncryptor(), CryptoStreamMode.Write))
             {
-                outWriter.Write(new StreamReader(crypted).ReadToEnd());
+                input.CopyTo(crypted);
             }
 
             using (var keyWriter = new StreamWriter(key))
             {
-                keyWriter.Write(Convert.ToBase64String(keyByte));
+                keyWriter.WriteLine(Convert.ToBase64String(algorithm.Key));
+                keyWriter.WriteLine(Convert.ToBase64String(algorithm.IV));
             }
         }
 
@@ -61,15 +59,17 @@ namespace Saltuk.Nsudotnet.Enigma
         {
             using (var keyReader = new StreamReader(key))
             {
-                var keyByte = Convert.FromBase64String(keyReader.ReadToEnd());
-                algorithm.IV = keyByte;
+
+                var keyByte = Convert.FromBase64String(keyReader.ReadLine());
+                var ivByte = Convert.FromBase64String(keyReader.ReadLine());
+                algorithm.IV = ivByte;
                 algorithm.Key = keyByte;
 
-                using (var crypted = new CryptoStream(input, algorithm.CreateDecryptor(), CryptoStreamMode.Read))
-                using (var outWriter = new StreamWriter(output))
+                using (var encrypted = new CryptoStream(input, algorithm.CreateDecryptor(), CryptoStreamMode.Read))
                 {
-                    outWriter.Write(new StreamReader(crypted).ReadToEnd());
+                    encrypted.CopyTo(output);
                 }
+
             }
         }
 
