@@ -192,17 +192,17 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
             SelectedAlgorithm = "AES";
 
             var args = Environment.GetCommandLineArgs();
-            if (args.Length < 2)
+            if (args.Length < 3)
                 return;
 
-            if (args[0] == "encrypt")
+            if (args[1] == "encrypt")
                 _isEncrypt = true;
             else if (args[1] == "decrypt")
                 _isEncrypt = false;
             else
                 MessageBox.Show("Unrecognized command line parameters", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
-            InputFile = args[1];
+            InputFile = args[2];
         }
     }
 }
