@@ -41,7 +41,7 @@ namespace Saltuk.Nsudotnet.Rss2Email
             {
                 { "r|rss=", "http address of {RSS} channel", s => rssArg = s },
                 { "e|email=", "{EMAIL} address to forward {RSS} items", s => emailArg = s },
-                { "p|period=", "{PERIOD}(in seconds) to check new {RSS} items - not necessary", n => int.TryParse(n, out periodArg) }
+                { "p|period=", "{PERIOD}(in seconds) to check new {RSS} items - optional", n => int.TryParse(n, out periodArg) }
             };
 
             try
@@ -63,6 +63,7 @@ namespace Saltuk.Nsudotnet.Rss2Email
 
             if (rssArg == null || emailArg == null)
             {
+                Console.WriteLine("Usage:");
                 p.WriteOptionDescriptions(Console.Out);
                 return false;
             }

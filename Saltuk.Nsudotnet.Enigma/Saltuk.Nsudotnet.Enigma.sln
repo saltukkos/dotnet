@@ -5,6 +5,11 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltuk.Nsudotnet.Enigma", "Saltuk.Nsudotnet.Enigma.csproj", "{F94666B5-3F8B-458F-8892-CC52D86DEC34}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saltuk.Nsudotnet.EnigmaWPFWrapper", "..\Saltuk.Nsudotnet.EnigmaWPFWrapper\Saltuk.Nsudotnet.EnigmaWPFWrapper.csproj", "{B272FCE3-CB48-4C4A-BAC4-7285AAEA148B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F94666B5-3F8B-458F-8892-CC52D86DEC34} = {F94666B5-3F8B-458F-8892-CC52D86DEC34}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +20,10 @@ Global
 		{F94666B5-3F8B-458F-8892-CC52D86DEC34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F94666B5-3F8B-458F-8892-CC52D86DEC34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F94666B5-3F8B-458F-8892-CC52D86DEC34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B272FCE3-CB48-4C4A-BAC4-7285AAEA148B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B272FCE3-CB48-4C4A-BAC4-7285AAEA148B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B272FCE3-CB48-4C4A-BAC4-7285AAEA148B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B272FCE3-CB48-4C4A-BAC4-7285AAEA148B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

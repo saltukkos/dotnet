@@ -4,9 +4,9 @@ using System.Security.Cryptography;
 
 namespace Saltuk.Nsudotnet.Enigma
 {
-    class Program
+    public class Cryptor
     {
-        class CryptSettings
+        private class CryptSettings
         {
             public SymmetricAlgorithm Algorithm { get; set; }
             public string InputFilename { get; set; }
@@ -16,7 +16,7 @@ namespace Saltuk.Nsudotnet.Enigma
         }
 
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             CryptSettings settings;
             if (!TryParseArguments(args, out settings))
@@ -40,7 +40,7 @@ namespace Saltuk.Nsudotnet.Enigma
             }
         }
 
-        static void Encrypt(SymmetricAlgorithm algorithm, Stream input, Stream output, Stream key)
+        public static void Encrypt(SymmetricAlgorithm algorithm, Stream input, Stream output, Stream key)
         {
 
             using (var crypted = new CryptoStream(output, algorithm.CreateEncryptor(), CryptoStreamMode.Write))
@@ -55,7 +55,7 @@ namespace Saltuk.Nsudotnet.Enigma
             }
         }
 
-        static void Decrypt(SymmetricAlgorithm algorithm, Stream input, Stream output, Stream key)
+        public static void Decrypt(SymmetricAlgorithm algorithm, Stream input, Stream output, Stream key)
         {
             using (var keyReader = new StreamReader(key))
             {
@@ -73,7 +73,20 @@ namespace Saltuk.Nsudotnet.Enigma
             }
         }
 
-        static bool TryParseArguments(string[] args, out CryptSettings settings)
+        public static SymmetricAlgorithm ByName(string name)
+        {
+            if (name.Equals("AES", StringComparison.OrdinalIgnoreCase))
+                return Aes.Create();
+            if (name.Equals("DES", StringComparison.OrdinalIgnoreCase))
+                return DES.Create();
+            if (name.Equals("RC2", StringComparison.OrdinalIgnoreCase))
+                return RC2.Create();
+            if (name.Equals("Rijndael", StringComparison.OrdinalIgnoreCase))
+                return Rijndael.Create();
+            return null;
+        }
+
+        private static bool TryParseArguments(string[] args, out CryptSettings settings)
         {
             settings = new CryptSettings();
 
@@ -96,18 +109,8 @@ namespace Saltuk.Nsudotnet.Enigma
                 settings.KeyFileName = args[4];
             }
 
-            if (args[2].Equals("AES", StringComparison.OrdinalIgnoreCase))
-                settings.Algorithm = Aes.Create();
-            else if (args[2].Equals("DES", StringComparison.OrdinalIgnoreCase))
-                settings.Algorithm = DES.Create();
-            else if (args[2].Equals("RC2", StringComparison.OrdinalIgnoreCase))
-                settings.Algorithm = RC2.Create();
-            else if (args[2].Equals("Rijndael", StringComparison.OrdinalIgnoreCase))
-                settings.Algorithm = Rijndael.Create();
-            else
-                return false;
-
-            return true;
+            settings.Algorithm = ByName(args[2]);
+            return settings.Algorithm != null;
         }
 
     }
