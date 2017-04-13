@@ -52,7 +52,7 @@
             <Button x:Name="BrowseKey" Content="Browse" Grid.Column="2" Grid.Row="2" MinWidth="80" Margin="3"/>
         </Grid>
 
-        <Button x:Name="Do" Content="Do!" Grid.Column="1" Grid.Row="1" Width="Auto" MinWidth="150" Height="40" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10"></Button>
+        <Button x:Name="Do" Content="Do!" Grid.Column="1" Grid.Row="1" Width="Auto" MinWidth="150" Height="30" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10"></Button>
     </Grid>
 </Window>
 

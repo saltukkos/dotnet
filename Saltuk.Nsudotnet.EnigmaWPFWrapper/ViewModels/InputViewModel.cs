@@ -55,6 +55,13 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
             set
             {
                 _inputFile = value;
+                if (_isEncrypt)
+                {
+                    if (string.IsNullOrEmpty(_outputFile))
+                        OutputFile = InputFile + ".crypted";
+                    if (string.IsNullOrEmpty(KeyFile))
+                        KeyFile = InputFile + ".key";
+                }
                 NotifyOfPropertyChange(() => InputFile);
                 NotifyOfPropertyChange(() => CanDo);
             }
@@ -149,12 +156,12 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
                     else
                         Cryptor.Decrypt(Cryptor.ByName(_algorithm), inFile, outFile, key);
 
-                    MessageBox.Show("Success!");
+                    MessageBox.Show("Operation completed", "Success!", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception e)
             {
-                MessageBox.Show($"Error: {e.Message}");
+                MessageBox.Show($"Error: {e.Message}", "Fail", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
