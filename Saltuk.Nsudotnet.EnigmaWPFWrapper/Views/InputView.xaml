@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Saltuk.Nsudotnet.EnigmaWPFWrapper.Views"
         mc:Ignorable="d"
-        Title="InputView" Height="178.05" Width="689">
+        Title="InputView" 
+        Height="180" Width="650"
+        MinHeight="180" MinWidth="650"
+        MaxHeight="180">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
