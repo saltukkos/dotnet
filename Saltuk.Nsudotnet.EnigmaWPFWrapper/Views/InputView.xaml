@@ -27,7 +27,7 @@
             </StackPanel>
         </GroupBox>
 
-        <GroupBox Header="Crytping algorithm" Grid.Column="0" Grid.Row="1">
+        <GroupBox Header="Crypting algorithm" Grid.Column="0" Grid.Row="1">
             <StackPanel Margin="5">
                 <ComboBox x:Name="Algorithm"/>
             </StackPanel>
