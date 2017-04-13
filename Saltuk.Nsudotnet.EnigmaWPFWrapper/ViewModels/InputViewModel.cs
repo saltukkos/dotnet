@@ -21,6 +21,8 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
 
         private string _algorithm;
 
+        private bool _autofill = true;
+
         public bool IsEncryptChecked
         {
             get
@@ -55,12 +57,30 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
             set
             {
                 _inputFile = value;
-                if (_isEncrypt)
+                if (_autofill)
                 {
-                    if (string.IsNullOrEmpty(_outputFile))
-                        OutputFile = InputFile + ".crypted";
-                    if (string.IsNullOrEmpty(KeyFile))
-                        KeyFile = InputFile + ".key";
+
+                    if (_isEncrypt)
+                    {
+                        _outputFile = _inputFile + ".crypted";
+                        _keyFile = _inputFile + ".key";
+                    }
+                    else
+                    {
+                        if (_inputFile.EndsWith(".crypted"))
+                        {
+                            _outputFile = _inputFile.Remove(_inputFile.Length - 8);
+                            _keyFile = _outputFile + ".key";
+                        }
+                        else
+                        {
+                            _outputFile = "";
+                            _keyFile = "";
+                        }
+                    }
+
+                    NotifyOfPropertyChange(() => OutputFile);
+                    NotifyOfPropertyChange(() => KeyFile);
                 }
                 NotifyOfPropertyChange(() => InputFile);
                 NotifyOfPropertyChange(() => CanDo);
@@ -74,6 +94,7 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
             }
             set
             {
+                _autofill = false;
                 _outputFile = value;
                 NotifyOfPropertyChange(() => OutputFile);
                 NotifyOfPropertyChange(() => CanDo);
@@ -87,6 +108,7 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
             }
             set
             {
+                _autofill = false;
                 _keyFile = value;
                 NotifyOfPropertyChange(() => KeyFile);
                 NotifyOfPropertyChange(() => CanDo);
