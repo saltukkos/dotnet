@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace Saltuk.Nsudotnet.Enigma
 {
@@ -33,19 +34,27 @@ namespace Saltuk.Nsudotnet.Enigma
             {
 
                 if (settings.IsEncrypting)
-                    Encrypt(settings.Algorithm, inFile, outFile, key);
+                    Encrypt(settings.Algorithm, inFile, outFile, key, d => Console.WriteLine("Progress: {0}", d)).RunSynchronously();
                 else
-                    Decrypt(settings.Algorithm, inFile, outFile, key);
+                    Decrypt(settings.Algorithm, inFile, outFile, key, d => Console.WriteLine("Progress: {0}", d)).RunSynchronously();
                     
             }
         }
 
-        public static void Encrypt(SymmetricAlgorithm algorithm, Stream input, Stream output, Stream key)
+        public static async Task Encrypt(SymmetricAlgorithm algorithm, Stream input, Stream output, Stream key, Action<double> progressCallback)
         {
-
             using (var crypted = new CryptoStream(output, algorithm.CreateEncryptor(), CryptoStreamMode.Write))
             {
-                input.CopyTo(crypted);
+                long ready = 0;
+                long size = input.Length;
+                var buff = new byte[1024 * 100];
+                while (ready < size)
+                {
+                    var n = await input.ReadAsync(buff, 0, buff.Length);
+                    await crypted.WriteAsync(buff, 0, n);
+                    ready += n;
+                    progressCallback.Invoke((double)ready / size);
+                }
             }
 
             using (var keyWriter = new StreamWriter(key))
@@ -55,19 +64,27 @@ namespace Saltuk.Nsudotnet.Enigma
             }
         }
 
-        public static void Decrypt(SymmetricAlgorithm algorithm, Stream input, Stream output, Stream key)
+        public static async Task Decrypt(SymmetricAlgorithm algorithm, Stream input, Stream output, Stream key, Action<double> progressCallback)
         {
             using (var keyReader = new StreamReader(key))
             {
-
                 var keyByte = Convert.FromBase64String(keyReader.ReadLine());
                 var ivByte = Convert.FromBase64String(keyReader.ReadLine());
                 algorithm.IV = ivByte;
                 algorithm.Key = keyByte;
 
-                using (var encrypted = new CryptoStream(input, algorithm.CreateDecryptor(), CryptoStreamMode.Read))
+                using (var encrypted = new CryptoStream(output, algorithm.CreateDecryptor(), CryptoStreamMode.Write))
                 {
-                    encrypted.CopyTo(output);
+                    long ready = 0;
+                    long size = input.Length;
+                    var buff = new byte[1024 * 100];
+                    while (ready < size)
+                    {
+                        var n = await input.ReadAsync(buff, 0, buff.Length);
+                        await encrypted.WriteAsync(buff, 0, n);
+                        ready += n;
+                        progressCallback.Invoke((double)ready / size);
+                    }
                 }
 
             }

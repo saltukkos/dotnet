@@ -22,6 +22,8 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
         private string _algorithm;
 
         private bool _autofill = true;
+        private bool _working;
+        private double _progress;
 
         public bool IsEncryptChecked
         {
@@ -32,6 +34,7 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
             set
             {
                 _isEncrypt = value;
+                AutoFill();
                 NotifyOfPropertyChange(() => IsEncryptChecked);
             }
         }
@@ -44,6 +47,7 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
             set
             {
                 _isEncrypt = !value;
+                AutoFill();
                 NotifyOfPropertyChange(() => IsDecryptChecked);
             }
         }
@@ -57,31 +61,7 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
             set
             {
                 _inputFile = value;
-                if (_autofill)
-                {
-
-                    if (_isEncrypt)
-                    {
-                        _outputFile = _inputFile + ".crypted";
-                        _keyFile = _inputFile + ".key";
-                    }
-                    else
-                    {
-                        if (_inputFile.EndsWith(".crypted"))
-                        {
-                            _outputFile = _inputFile.Remove(_inputFile.Length - 8);
-                            _keyFile = _outputFile + ".key";
-                        }
-                        else
-                        {
-                            _outputFile = "";
-                            _keyFile = "";
-                        }
-                    }
-
-                    NotifyOfPropertyChange(() => OutputFile);
-                    NotifyOfPropertyChange(() => KeyFile);
-                }
+                AutoFill();
                 NotifyOfPropertyChange(() => InputFile);
                 NotifyOfPropertyChange(() => CanDo);
             }
@@ -126,12 +106,22 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
             }
         }
 
+        public double Progress
+        {
+            get { return _progress; }
+            set {
+                _progress = value;
+                NotifyOfPropertyChange(() => Progress);
+            }
+        }
+
         public List<string> Algorithm => new List<string>() { "AES", "DES", "RC2", "Rijndael" };
 
         public bool CanDo => !string.IsNullOrEmpty(_inputFile) &&
                              !string.IsNullOrEmpty(_outputFile) &&
                              !string.IsNullOrEmpty(_keyFile) &&
-                             !string.IsNullOrEmpty(_algorithm);
+                             !string.IsNullOrEmpty(_algorithm) &&
+                             !_working;
 
 
         public void BrowseInput()
@@ -162,10 +152,14 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
             }
         }
 
-        public void Do()
+        public async void Do()
         {
+            Progress = 0.5;
             try
             {
+                _working = true;
+                NotifyOfPropertyChange(() => CanDo);
+
                 using (var inFile = new FileStream(_inputFile, FileMode.Open))
                 using (var outFile = new FileStream(_outputFile, FileMode.Create))
                 using (var key = _isEncrypt
@@ -174,9 +168,9 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
                 {
 
                     if (_isEncrypt)
-                        Cryptor.Encrypt(Cryptor.ByName(_algorithm), inFile, outFile, key);
+                        await Cryptor.Encrypt(Cryptor.ByName(_algorithm), inFile, outFile, key, d => Progress = d);
                     else
-                        Cryptor.Decrypt(Cryptor.ByName(_algorithm), inFile, outFile, key);
+                        await Cryptor.Decrypt(Cryptor.ByName(_algorithm), inFile, outFile, key, d => Progress = d);
 
                     MessageBox.Show("Operation completed", "Success!", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -184,6 +178,12 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
             catch (Exception e)
             {
                 MessageBox.Show($"Error: {e.Message}", "Fail", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                Progress = 0;
+                _working = false;
+                NotifyOfPropertyChange(() => CanDo);
             }
         }
 
@@ -203,6 +203,34 @@ namespace Saltuk.Nsudotnet.EnigmaWPFWrapper.ViewModels
                 MessageBox.Show("Unrecognized command line parameters", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
             InputFile = args[2];
+        }
+
+        private void AutoFill()
+        {
+            if (!_autofill || string.IsNullOrEmpty(InputFile))
+                return;
+
+            if (_isEncrypt)
+            {
+                _outputFile = _inputFile + ".crypted";
+                _keyFile = _inputFile + ".key";
+            }
+            else
+            {
+                if (_inputFile.EndsWith(".crypted"))
+                {
+                    _outputFile = _inputFile.Remove(_inputFile.Length - 8);
+                    _keyFile = _outputFile + ".key";
+                }
+                else
+                {
+                    _outputFile = "";
+                    _keyFile = "";
+                }
+            }
+
+            NotifyOfPropertyChange(() => OutputFile);
+            NotifyOfPropertyChange(() => KeyFile);
         }
     }
 }
