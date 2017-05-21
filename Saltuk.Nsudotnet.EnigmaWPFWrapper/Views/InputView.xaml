@@ -59,6 +59,10 @@
         <Button x:Name="Do" Content="Do!" Grid.Column="1" Grid.Row="1" Width="Auto" MinWidth="150" Height="30" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10"></Button>
         <ProgressBar x:Name="Progress" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Height="20" Maximum="1" />
     </Grid>
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo Description="An app with a taskbar info description" 
+                     ProgressValue="{Binding Progress}" ProgressState="Normal"/>
+    </Window.TaskbarItemInfo>
 </Window>
 
 
