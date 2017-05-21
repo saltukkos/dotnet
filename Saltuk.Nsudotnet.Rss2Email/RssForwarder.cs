@@ -28,10 +28,10 @@ namespace Saltuk.Nsudotnet.Rss2Email
                     var res = WebRequest.Create(uri).GetResponse();
                     var rss = XDocument.Load(res.GetResponseStream());
 
-                    List<string> newGuids;
+                    IEnumerable<string> newGuids;
                     var sendData = GetRecentNews(rss, out newGuids);
 
-                    if (sendData.Count > 0 && sender.SendMessage(sendData))
+                    if (sendData != null && sender.SendMessage(sendData))
                     {
                         _readNews.UnionWith(newGuids);
                     }
@@ -49,36 +49,39 @@ namespace Saltuk.Nsudotnet.Rss2Email
             return _readNews;
         }
 
-        private List<SendData> GetRecentNews(XDocument rss, out List<string> guids)
+        private IEnumerable<SendData> GetRecentNews(XDocument rss, out IEnumerable<string> guids)
         {
-            var items = from item in rss.Descendants()
-                        where item.Name.LocalName == "item"
-                        select new
-                        {
-                            title = item.Element("title")?.Value,
-                            link = item.Element("link")?.Value,
-                            description = item.Element("description")?.Value,
-                            guid = item.Element("guid")?.Value
-                        }
-            ;
-
-            var sendData = new List<SendData>();
-            guids = new List<string>();
-            foreach (var item in items)
-            {
-                if (item.guid == null || _readNews.Contains(item.guid))
-                    continue;
-
-                guids.Add(item.guid);
-                sendData.Add(new SendData()
+            var news = 
+            (
+                from item in rss.Descendants()
+                where item.Name.LocalName == "item"
+                where item.Element("guid") != null
+                where !_readNews.Contains(item.Element("guid")?.Value)
+                select new
                 {
+                    title = item.Element("title")?.Value,
+                    link = item.Element("link")?.Value,
+                    description = item.Element("description")?.Value,
+                    guid = item.Element("guid")?.Value
+                }
+            ).ToDictionary(
+                item => item.guid, 
+                item => new SendData
+                {
+                    Title = item.title,
                     Description = item.description,
-                    Link = item.link,
-                    Title = item.title
-                });
+                    Link = item.link
+                }
+            );
+
+            if (news.Count > 0)
+            {
+                guids = news.Keys;
+                return news.Values;
             }
 
-            return sendData;
+            guids = null;
+            return null;
         }
 
         private static void SleepWatchingKey(int msec)
