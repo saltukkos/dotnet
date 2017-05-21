@@ -8,7 +8,7 @@
         Title="InputView" 
         Height="180" Width="650"
         MinHeight="180" MinWidth="650"
-        MaxHeight="180">
+        MaxHeight="180" ResizeMode="CanMinimize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
