@@ -23,7 +23,7 @@ namespace Saltuk.Nsudotnet.Rss2Email
             if (!ParseParams(args, out url, out email, out checkPeriod))
                 return;
 
-            using (var gmailSender = new GmailSender("rss2emailforwarder@gmail.com", "rss2emailforwarderpassworD", email))
+            using (var gmailSender = new GmailSender(ConfigurationManager.AppSettings["eLogin"], ConfigurationManager.AppSettings["ePassword"], email))
             {
                 RssForwarder forwarder = new RssForwarder(GetSavedInstance());
                 var newState = forwarder.StartForwarding(new Uri(url), gmailSender, checkPeriod);
