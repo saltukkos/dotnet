@@ -25,18 +25,20 @@ namespace Saltuk.Nsudotnet.Rss2Email
             {
                 try
                 {
-                    var res = WebRequest.Create(uri).GetResponse();
-                    var rss = XDocument.Load(res.GetResponseStream());
-
-                    IEnumerable<string> newGuids;
-                    var sendData = GetRecentNews(rss, out newGuids);
-
-                    if (sendData != null && sender.SendMessage(sendData))
+                    using (var res = WebRequest.Create(uri).GetResponse().GetResponseStream())
                     {
-                        _readNews.UnionWith(newGuids);
-                    }
+                        var rss = XDocument.Load(res);
 
-                    SleepWatchingKey(checkPeriod * 1000);
+                        IEnumerable<string> newGuids;
+                        var sendData = GetRecentNews(rss, out newGuids);
+
+                        if (sendData != null && sender.SendMessage(sendData))
+                        {
+                            _readNews.UnionWith(newGuids);
+                        }
+
+                        SleepWatchingKey(checkPeriod * 1000);
+                    }
                 }
                 catch (Exception e)
                 {
